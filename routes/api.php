@@ -14,6 +14,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function () {
+    Route::prefix('pet')->group(function () {
+
+        Route::post('', 'PetController@');
+
+        Route::put('', 'PetController@');
+
+        Route::get('', 'PetController@');
+
+        Route::get('/pet/findByTags', 'PetController@');
+
+        Route::post('{petId}', 'PetController@');
+
+    });
+
+    Route::prefix('store')->group(function () {
+        Route::prefix('order')->group(function () {
+
+            Route::post('', 'OrderController@create');
+
+            Route::get('{orderId}','OrderController@findById');
+
+            Route::delete('{orderId}','OrderController@remove');
+
+        });
+    });
 });
