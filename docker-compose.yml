@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  mariadb:
+    image: 'bitnami/mariadb:10.1'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=root
+      - MARIADB_DATABASE=petshop
+      - MARIADB_PASSWORD=1234
+
+  myapp:
+    tty: true
+    image: bitnami/laravel:7
+    environment:
+      - DB_HOST=mariadb
+      - DB_USERNAME=root
+      - DB_DATABASE=petshop
+      - DB_PASSWORD=1234
+    depends_on:
+      - mariadb
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app
