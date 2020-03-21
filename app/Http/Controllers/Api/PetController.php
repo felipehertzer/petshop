@@ -1,10 +1,11 @@
 <?php
 
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 
 use App\Category;
+use App\Http\Controllers\Controller;
 use App\Pet;
 use App\Photo;
 use App\Tag;

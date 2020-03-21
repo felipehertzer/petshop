@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function(){
 
-    Route::post('login', 'ApiAuthController@login');
+    Route::post('login', 'Api\AuthController@login');
 
-    Route::post('register', 'ApiAuthController@register');
+    Route::post('register', 'Api\AuthController@register');
 
     Route::group(['middleware' => 'auth:api'], function(){
-        Route::post('getUser', 'ApiAuthController@getUser');
+        Route::post('getUser', 'Api\AuthController@getUser');
     });
 
 });
@@ -30,30 +30,30 @@ Route::middleware('auth:api')->group(function () {
 
     Route::prefix('pet')->group(function () {
 
-        Route::post('', 'PetController@create');
+        Route::post('', 'Api\PetController@create');
 
-        Route::put('', 'PetController@update');
+        Route::put('', 'Api\PetController@update');
 
-        Route::get('findByTags', 'PetController@findByTags');
+        Route::get('findByTags', 'Api\PetController@findByTags');
 
-        Route::get('{petId}', 'PetController@findById')->where('petId', '[0-9]+');
+        Route::get('{petId}', 'Api\PetController@findById')->where('petId', '[0-9]+');
 
-        Route::post('{petId}', 'PetController@updateByForm')->where('petId', '[0-9]+');
+        Route::post('{petId}', 'Api\PetController@updateByForm')->where('petId', '[0-9]+');
 
-        Route::delete('{petId}', 'PetController@remove')->where('petId', '[0-9]+');
+        Route::delete('{petId}', 'Api\PetController@remove')->where('petId', '[0-9]+');
 
-        Route::post('{petId}/uploadImage', 'PetController@uploadImage')->where('petId', '[0-9]+');
+        Route::post('{petId}/uploadImage', 'Api\PetController@uploadImage')->where('petId', '[0-9]+');
 
     });
 
     Route::prefix('store')->group(function () {
         Route::prefix('order')->group(function () {
 
-            Route::post('', 'OrderController@create');
+            Route::post('', 'Api\OrderController@create');
 
-            Route::get('{orderId}','OrderController@findById')->where('orderId', '[0-9]+');
+            Route::get('{orderId}','Api\OrderController@findById')->where('orderId', '[0-9]+');
 
-            Route::delete('{orderId}','OrderController@remove')->where('orderId', '[0-9]+');
+            Route::delete('{orderId}','Api\OrderController@remove')->where('orderId', '[0-9]+');
 
         });
     });
