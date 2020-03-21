@@ -1,21 +1,23 @@
 <?php
 
+
 namespace App;
+
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Photo extends Model
 {
-    protected $table = 'categories';
+    protected $table = 'photos';
     protected $dates = [
         'created_at', 'updated_at'
     ];
     protected $hidden = [
-        'created_at', 'updated_at'
+        'created_at', 'updated_at', 'petId'
     ];
 
-    public function pets()
+    public function pet()
     {
-        return $this->hasMany('App\Pet');
+        return $this->belongsTo('App\Pet');
     }
 }

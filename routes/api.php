@@ -14,18 +14,35 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::prefix('auth')->group(function(){
+
+    Route::post('login', 'ApiAuthController@login');
+
+    Route::post('register', 'ApiAuthController@register');
+
+    Route::group(['middleware' => 'auth:api'], function(){
+        Route::post('getUser', 'ApiAuthController@getUser');
+    });
+
+});
+
 Route::middleware('auth:api')->group(function () {
+
     Route::prefix('pet')->group(function () {
 
-        Route::post('', 'PetController@');
+        Route::post('', 'PetController@create');
 
-        Route::put('', 'PetController@');
+        Route::put('', 'PetController@update');
 
-        Route::get('', 'PetController@');
+        Route::get('findByTags', 'PetController@findByTags');
 
-        Route::get('/pet/findByTags', 'PetController@');
+        Route::get('{petId}', 'PetController@findById')->where('petId', '[0-9]+');
 
-        Route::post('{petId}', 'PetController@');
+        Route::post('{petId}', 'PetController@updateByForm')->where('petId', '[0-9]+');
+
+        Route::delete('{petId}', 'PetController@remove')->where('petId', '[0-9]+');
+
+        Route::post('{petId}/uploadImage', 'PetController@uploadImage')->where('petId', '[0-9]+');
 
     });
 
@@ -34,9 +51,9 @@ Route::middleware('auth:api')->group(function () {
 
             Route::post('', 'OrderController@create');
 
-            Route::get('{orderId}','OrderController@findById');
+            Route::get('{orderId}','OrderController@findById')->where('orderId', '[0-9]+');
 
-            Route::delete('{orderId}','OrderController@remove');
+            Route::delete('{orderId}','OrderController@remove')->where('orderId', '[0-9]+');
 
         });
     });

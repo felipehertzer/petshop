@@ -16,11 +16,12 @@ class CreatePetsTable extends Migration
         Schema::create('pets', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('tagId');
+            $table->unsignedBigInteger('categoryId');
             $table->enum('status', ['available', 'pending', 'sold']);
             $table->timestamps();
 
-            $table->foreign('tagId')->references('id')->on('tags');
+            $table->index(['status']);
+            $table->foreign('categoryId')->references('id')->on('categories');
         });
     }
 

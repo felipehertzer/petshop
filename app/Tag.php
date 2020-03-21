@@ -11,4 +11,12 @@ class Tag extends Model
     protected $dates = [
         'created_at', 'updated_at'
     ];
+    protected $hidden = [
+        'created_at', 'updated_at', 'petId'
+    ];
+
+    public function pet()
+    {
+        return $this->belongsTo('App\Pet');
+    }
 }
