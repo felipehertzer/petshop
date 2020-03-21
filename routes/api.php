@@ -36,13 +36,13 @@ Route::middleware('auth:api')->group(function () {
 
         Route::get('findByTags', 'Api\PetController@findByTags');
 
-        Route::get('{petId}', 'Api\PetController@findById')->where('petId', '[0-9]+');
+        Route::get('{petId}', 'Api\PetController@findById');
 
-        Route::post('{petId}', 'Api\PetController@updateByForm')->where('petId', '[0-9]+');
+        Route::post('{petId}', 'Api\PetController@updateByForm');
 
-        Route::delete('{petId}', 'Api\PetController@remove')->where('petId', '[0-9]+');
+        Route::delete('{petId}', 'Api\PetController@remove');
 
-        Route::post('{petId}/uploadImage', 'Api\PetController@uploadImage')->where('petId', '[0-9]+');
+        Route::post('{petId}/uploadImage', 'Api\PetController@uploadImage');
 
     });
 
@@ -51,9 +51,9 @@ Route::middleware('auth:api')->group(function () {
 
             Route::post('', 'Api\OrderController@create');
 
-            Route::get('{orderId}','Api\OrderController@findById')->where('orderId', '[0-9]+');
+            Route::get('{orderId}','Api\OrderController@findById');
 
-            Route::delete('{orderId}','Api\OrderController@remove')->where('orderId', '[0-9]+');
+            Route::delete('{orderId}','Api\OrderController@remove');
 
         });
     });

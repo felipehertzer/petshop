@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Category;
+use App\Exceptions\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Pet;
 use App\Photo;
 use App\Tag;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -28,9 +30,16 @@ class PetController extends Controller
         }
 
         if ($petId) {
-            $pet = Pet::findOrFail($petId);
-            $pet->tags()->delete();
-            $pet->photos()->delete();
+            if(!is_numeric($petId)){
+                throw new ApiResponse('Invalid ID supplied', 400);
+            }
+            try {
+                $pet = Pet::findOrFail($petId);
+                $pet->tags()->delete();
+                $pet->photos()->delete();
+            } catch (ModelNotFoundException $e){
+                throw new ApiResponse('Pet not found', 404);
+            }
         } else {
             $pet = new Pet();
         }
@@ -67,7 +76,7 @@ class PetController extends Controller
                 'status' => 'required|in:available,pending,sold',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 405);
+            throw new ApiResponse('Invalid Input', 405);
         }
 
         DB::beginTransaction();
@@ -92,7 +101,7 @@ class PetController extends Controller
                 'status' => 'required|in:available,pending,sold',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 405);
+            throw new ApiResponse('Validation exception', 405);
         }
 
         DB::beginTransaction();
@@ -111,7 +120,7 @@ class PetController extends Controller
                 'tags' => 'required|array',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 405);
+            throw new ApiResponse('Invalid tag value', 400);
         }
 
         $pet = Pet::whereHas('tags', fn($q) => $q->whereIn('name', array_map('strtolower', $request->get('tags'))))
@@ -122,57 +131,83 @@ class PetController extends Controller
 
     public function updateByForm(Request $request, $petId)
     {
+        if(!is_numeric($petId)){
+            throw new ApiResponse('Invalid ID supplied', 400);
+        }
+
         $validator = Validator::make($request->all(),
             [
                 'name' => 'required',
                 'status' => 'required|in:available,pending,sold',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 405);
+            throw new ApiResponse('Invalid Input', 405);
         }
 
-        DB::beginTransaction();
+        try {
+            DB::beginTransaction();
 
-        $pet = Pet::findOrFail($petId);
-        $pet->name = $request->get('name');
-        $pet->status = $request->get('status');
-        $pet->save();
+            $pet = Pet::findOrFail($petId);
+            $pet->name = $request->get('name');
+            $pet->status = $request->get('status');
+            $pet->save();
 
-        DB::commit();
+            DB::commit();
 
-        return response()->json('', 200);
+            return response()->json('', 200);
+        } catch (ModelNotFoundException $e){
+            throw new ApiResponse('Pet not found', 404);
+        }
     }
 
     public function findById($petId)
     {
-        $pet = Pet::where('id', $petId)->with(['category', 'tags', 'photos'])->firstOrFail();
+        if(!is_numeric($petId)){
+            throw new ApiResponse('Invalid ID supplied', 400);
+        }
 
-        return response()->json($pet, 200);
+        try {
+            $pet = Pet::where('id', $petId)->with(['category', 'tags', 'photos'])->firstOrFail();
+            return response()->json($pet, 200);
+        } catch (ModelNotFoundException $e){
+            throw new ApiResponse('Pet not found', 404);
+        }
     }
 
     public function remove($petId)
     {
-        $pet = Pet::findOrFail($petId);
-
-        foreach ($pet->photos as $photo) {
-            Storage::disk('public')->delete($photo);
+        if(!is_numeric($petId)){
+            throw new ApiResponse('Invalid ID supplied', 400);
         }
+        try {
+            $pet = Pet::findOrFail($petId);
 
-        $pet->tags()->delete();
-        $pet->photos()->delete();
-        $pet->delete();
+            foreach ($pet->photos as $photo) {
+                Storage::disk('public')->delete($photo);
+            }
 
-        return response()->json('', 200);
+            $pet->tags()->delete();
+            $pet->photos()->delete();
+            $pet->delete();
+
+            return response()->json('', 200);
+        } catch (ModelNotFoundException $e){
+            throw new ApiResponse('Pet not found', 404);
+        }
     }
 
     public function uploadImage(Request $request, $petId)
     {
+        if(!is_numeric($petId)){
+            throw new ApiResponse('Invalid ID supplied', 400);
+        }
+
         $validator = Validator::make($request->all(),
             [
                 'file' => 'required|image|max:10240',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 405);
+            throw new ApiResponse('Invalid Input', 405);
         }
 
         $imageName = 'images/pet/' . rand() . time() . '.' . $request->image->getClientOriginalExtension();
