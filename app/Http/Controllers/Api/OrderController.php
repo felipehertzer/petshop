@@ -27,7 +27,7 @@ class OrderController extends Controller
                     })
                 ],
                 'quantity' => 'required|numeric|min:1',
-                'shipDate' => 'required|date_format:Y-m-d\TH:i:s.u\Z',
+                'shipDate' => 'required|date_format:Y-m-d\TH:i:s.v\Z',
                 'complete' => 'required|boolean',
                 'status' => 'required|in:placed,approved,delivered',
             ]);
@@ -40,7 +40,7 @@ class OrderController extends Controller
         $order = new Order();
         $order->petId = $request->get('petId');
         $order->quantity = $request->get('quantity');
-        $order->shipDate = Carbon::createFromFormat('Y-m-d\TH:i:s.u\Z', $request->get('shipDate'));
+        $order->shipDate = Carbon::createFromFormat('Y-m-d\TH:i:s.v\Z', $request->get('shipDate'));
         $order->complete = $request->get('complete');
         $order->status = $request->get('status');
         $order->save();

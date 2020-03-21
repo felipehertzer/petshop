@@ -210,12 +210,12 @@ class PetController extends Controller
             throw new ApiResponse('Invalid Input', 405);
         }
 
-        $imageName = 'images/pet/' . rand() . time() . '.' . $request->image->getClientOriginalExtension();
-        Storage::disk('public')->put($imageName, $request->file);
+        $imageName = rand() . time() . '.' . $request->file->getClientOriginalExtension();
+        Storage::disk('public')->putFileAs('images/pet/', $request->file, $imageName);
 
         $photo = new Photo();
         $photo->petId = $petId;
-        $photo->photoUrl = url($imageName);
+        $photo->photoUrl = url('images/pet/'.$imageName);
         $photo->additionalMetadata = $request->get('additionalMetadata');
         $photo->save();
 
