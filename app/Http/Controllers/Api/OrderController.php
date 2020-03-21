@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
-    public function create(Request $request){
-
+    public function create(Request $request)
+    {
         $validator = Validator::make($request->all(),
             [
                 'petId' => 'required|numeric|exists:pets,id',
@@ -24,7 +24,7 @@ class OrderController extends Controller
                 'status' => 'required|in:placed,approved,delivered',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 405);
+            return response()->json(['error' => $validator->errors()], 405);
         }
 
         DB::beginTransaction();
@@ -42,13 +42,15 @@ class OrderController extends Controller
         return response()->json('', 200);
     }
 
-    public function findById($orderId){
+    public function findById($orderId)
+    {
         $order = Order::findOrFail($orderId);
 
         return response()->json($order, 200);
     }
 
-    public function remove($orderId){
+    public function remove($orderId)
+    {
         $order = Order::findOrFail($orderId);
         $order->delete();
 

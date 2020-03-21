@@ -16,9 +16,10 @@ use Illuminate\Support\Facades\Validator;
 
 class PetController extends Controller
 {
-    private function createOrUpdate(Request $request, $petId = null){
+    private function createOrUpdate(Request $request, $petId = null)
+    {
         $categoryId = $request->get('category')['id'];
-        if(!$categoryId){
+        if (!$categoryId) {
             $category = new Category();
             $category->name = $request->get('category')['name'];
             $category->save();
@@ -26,7 +27,7 @@ class PetController extends Controller
             $categoryId = $category->id;
         }
 
-        if($petId){
+        if ($petId) {
             $pet = Pet::findOrFail($petId);
             $pet->tags()->delete();
             $pet->photos()->delete();
@@ -39,14 +40,14 @@ class PetController extends Controller
         $pet->categoryId = $categoryId;
         $pet->save();
 
-        foreach($request->get('photoUrls') as $key => $photo){
+        foreach ($request->get('photoUrls') as $key => $photo) {
             $netPhoto = new Photo();
             $netPhoto->photoUrl = $photo;
             $netPhoto->petId = $pet->id;
             $netPhoto->save();
         }
 
-        foreach($request->get('tags') as $tag){
+        foreach ($request->get('tags') as $tag) {
             $netTag = new Tag();
             $netTag->name = strtolower($tag['name']);
             $netTag->petId = $pet->id;
@@ -54,7 +55,8 @@ class PetController extends Controller
         }
     }
 
-    public function create(Request $request){
+    public function create(Request $request)
+    {
         $validator = Validator::make($request->all(),
             [
                 'name' => 'required',
@@ -65,7 +67,7 @@ class PetController extends Controller
                 'status' => 'required|in:available,pending,sold',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 405);
+            return response()->json(['error' => $validator->errors()], 405);
         }
 
         DB::beginTransaction();
@@ -77,7 +79,8 @@ class PetController extends Controller
         return response()->json('', 200);
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $validator = Validator::make($request->all(),
             [
                 'id' => 'required|numeric',
@@ -89,7 +92,7 @@ class PetController extends Controller
                 'status' => 'required|in:available,pending,sold',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 405);
+            return response()->json(['error' => $validator->errors()], 405);
         }
 
         DB::beginTransaction();
@@ -101,13 +104,14 @@ class PetController extends Controller
         return response()->json('', 200);
     }
 
-    public function findByTags(Request $request){
+    public function findByTags(Request $request)
+    {
         $validator = Validator::make($request->all(),
             [
                 'tags' => 'required|array',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 405);
+            return response()->json(['error' => $validator->errors()], 405);
         }
 
         $pet = Pet::whereHas('tags', fn($q) => $q->whereIn('name', array_map('strtolower', $request->get('tags'))))
@@ -116,14 +120,15 @@ class PetController extends Controller
         return response()->json($pet, 200);
     }
 
-    public function updateByForm(Request $request, $petId){
+    public function updateByForm(Request $request, $petId)
+    {
         $validator = Validator::make($request->all(),
             [
                 'name' => 'required',
                 'status' => 'required|in:available,pending,sold',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 405);
+            return response()->json(['error' => $validator->errors()], 405);
         }
 
         DB::beginTransaction();
@@ -138,16 +143,18 @@ class PetController extends Controller
         return response()->json('', 200);
     }
 
-    public function findById($petId){
+    public function findById($petId)
+    {
         $pet = Pet::where('id', $petId)->with(['category', 'tags', 'photos'])->firstOrFail();
 
         return response()->json($pet, 200);
     }
 
-    public function remove($petId){
+    public function remove($petId)
+    {
         $pet = Pet::findOrFail($petId);
 
-        foreach($pet->photos as $photo){
+        foreach ($pet->photos as $photo) {
             Storage::disk('public')->delete($photo);
         }
 
@@ -158,16 +165,17 @@ class PetController extends Controller
         return response()->json('', 200);
     }
 
-    public function uploadImage(Request $request, $petId){
+    public function uploadImage(Request $request, $petId)
+    {
         $validator = Validator::make($request->all(),
             [
                 'file' => 'required|image|max:10240',
             ]);
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 405);
+            return response()->json(['error' => $validator->errors()], 405);
         }
 
-        $imageName = 'images/pet/'.rand().time().'.'.$request->image->getClientOriginalExtension();
+        $imageName = 'images/pet/' . rand() . time() . '.' . $request->image->getClientOriginalExtension();
         Storage::disk('public')->put($imageName, $request->file);
 
         $photo = new Photo();
