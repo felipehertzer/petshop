@@ -9,7 +9,8 @@ use App\User;
 
 class UserController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $users = User::paginate(15);
         return response()->view('web.user.index', compact('users'));
     }

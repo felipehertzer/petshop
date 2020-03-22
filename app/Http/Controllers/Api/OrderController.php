@@ -55,13 +55,13 @@ class OrderController extends Controller
 
     public function findById($orderId)
     {
-        if(!is_numeric($orderId)){
+        if (!is_numeric($orderId)) {
             throw new ApiResponse('Invalid ID supplied', 400);
         }
 
         try {
             $order = Order::findOrFail($orderId);
-        } catch (ModelNotFoundException $e){
+        } catch (ModelNotFoundException $e) {
             throw new ApiResponse('Order not found', 404);
         }
 
@@ -70,13 +70,13 @@ class OrderController extends Controller
 
     public function remove($orderId)
     {
-        if(!is_numeric($orderId)){
+        if (!is_numeric($orderId)) {
             throw new ApiResponse('Invalid ID supplied', 400);
         }
 
         try {
             $order = Order::findOrFail($orderId);
-            if($order->shipDate->isFuture()){
+            if ($order->shipDate->isFuture()) {
                 $order->delete();
 
                 $order->pet->status = 'available';
@@ -86,7 +86,7 @@ class OrderController extends Controller
             } else {
                 throw new ApiResponse('Order not found', 404);
             }
-        } catch (ModelNotFoundException $e){
+        } catch (ModelNotFoundException $e) {
             throw new ApiResponse('Order not found', 404);
         }
     }

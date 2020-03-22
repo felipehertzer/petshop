@@ -41,7 +41,7 @@ class OrderTest extends TestCase
 
     public function testFindOrderSuccess()
     {
-         $this->json('GET', '/api/store/order/1')
+        $this->json('GET', '/api/store/order/1')
             ->assertStatus(200);
     }
 

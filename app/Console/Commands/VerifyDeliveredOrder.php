@@ -40,7 +40,7 @@ class VerifyDeliveredOrder extends Command
     public function handle()
     {
         $orders = Order::whereIn('status', ['placed', 'approved'])->where('shipDate', '<=', Carbon::now())->get();
-        foreach($orders as $order){
+        foreach ($orders as $order) {
             $order->status = 'delivered';
             $order->save();
 

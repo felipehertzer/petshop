@@ -30,14 +30,14 @@ class PetController extends Controller
         }
 
         if ($petId) {
-            if(!is_numeric($petId)){
+            if (!is_numeric($petId)) {
                 throw new ApiResponse('Invalid ID supplied', 400);
             }
             try {
                 $pet = Pet::findOrFail($petId);
                 $pet->tags()->delete();
                 $pet->photos()->delete();
-            } catch (ModelNotFoundException $e){
+            } catch (ModelNotFoundException $e) {
                 throw new ApiResponse('Pet not found', 404);
             }
         } else {
@@ -131,7 +131,7 @@ class PetController extends Controller
 
     public function updateByForm(Request $request, $petId)
     {
-        if(!is_numeric($petId)){
+        if (!is_numeric($petId)) {
             throw new ApiResponse('Invalid ID supplied', 400);
         }
 
@@ -155,28 +155,28 @@ class PetController extends Controller
             DB::commit();
 
             return response()->json('', 200);
-        } catch (ModelNotFoundException $e){
+        } catch (ModelNotFoundException $e) {
             throw new ApiResponse('Pet not found', 404);
         }
     }
 
     public function findById($petId)
     {
-        if(!is_numeric($petId)){
+        if (!is_numeric($petId)) {
             throw new ApiResponse('Invalid ID supplied', 400);
         }
 
         try {
             $pet = Pet::where('id', $petId)->with(['category', 'tags', 'photos'])->firstOrFail();
             return response()->json($pet, 200);
-        } catch (ModelNotFoundException $e){
+        } catch (ModelNotFoundException $e) {
             throw new ApiResponse('Pet not found', 404);
         }
     }
 
     public function remove($petId)
     {
-        if(!is_numeric($petId)){
+        if (!is_numeric($petId)) {
             throw new ApiResponse('Invalid ID supplied', 400);
         }
         try {
@@ -191,14 +191,14 @@ class PetController extends Controller
             $pet->delete();
 
             return response()->json('', 200);
-        } catch (ModelNotFoundException $e){
+        } catch (ModelNotFoundException $e) {
             throw new ApiResponse('Pet not found', 404);
         }
     }
 
     public function uploadImage(Request $request, $petId)
     {
-        if(!is_numeric($petId)){
+        if (!is_numeric($petId)) {
             throw new ApiResponse('Invalid ID supplied', 400);
         }
 
@@ -215,7 +215,7 @@ class PetController extends Controller
 
         $photo = new Photo();
         $photo->petId = $petId;
-        $photo->photoUrl = url('images/pets/'.$imageName);
+        $photo->photoUrl = url('images/pets/' . $imageName);
         $photo->additionalMetadata = $request->get('additionalMetadata');
         $photo->save();
 

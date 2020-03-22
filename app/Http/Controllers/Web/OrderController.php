@@ -9,7 +9,8 @@ use App\Order;
 
 class OrderController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $orders = Order::paginate(15);
         return response()->view('web.order.index', compact('orders'));
     }

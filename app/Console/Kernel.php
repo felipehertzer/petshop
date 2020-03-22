@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('deliveredOrder:verify')->hourly();
+        $schedule->command('deliveredOrder:verify')->hourly();
     }
 
     /**
