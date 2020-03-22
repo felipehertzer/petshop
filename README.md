@@ -2,6 +2,13 @@
 
 This project was developed for a job interview. [API Models](https://app.swaggerhub.com/apis/5.5.Degrees/the-laravel/1.0.0).
 
+## Installation
+
+- Copy .env.example and rename to .env
+- RUN `composer install && php artisan key:generate && php artisan migrate && php artisan passport:install`
+- Change `DB_HOST=127.0.0.1` to `DB_HOST=mysql` in .env
+- RUN `docker-compose up`
+
 ## Test
 You can download [Insomnia](https://insomnia.rest/) to test all API requests. There is a file 'Insomnia_API_TEST.json', you can import this file and test it.
 
