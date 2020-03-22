@@ -211,11 +211,11 @@ class PetController extends Controller
         }
 
         $imageName = rand() . time() . '.' . $request->file->getClientOriginalExtension();
-        Storage::disk('public')->putFileAs('images/pet/', $request->file, $imageName);
+        Storage::disk('public')->putFileAs('images/pets/', $request->file, $imageName);
 
         $photo = new Photo();
         $photo->petId = $petId;
-        $photo->photoUrl = url('images/pet/'.$imageName);
+        $photo->photoUrl = url('images/pets/'.$imageName);
         $photo->additionalMetadata = $request->get('additionalMetadata');
         $photo->save();
 
