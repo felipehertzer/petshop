@@ -11,6 +11,7 @@ This project was developed for a job interview. [API Models](https://app.swagger
 
 ## Test
 You can download [Insomnia](https://insomnia.rest/) to test all API requests. There is a file 'Insomnia_API_TEST.json', you can import this file and test it.
+- This project uses Laravel Passport for Auth. To test, you need to login and get the token response and put in the header. `Authorization: Bearer {token}`
 
 ## Auto Testing
 To run the auto test you need run the command bellow:
