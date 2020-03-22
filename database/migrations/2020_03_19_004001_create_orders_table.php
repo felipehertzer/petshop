@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('petId');
             $table->integer('quantity');
             $table->timestamp('shipDate');
-            $table->enum('status', ['placed', 'approved', 'delivered']);
+            $table->enum('status', ['placed', 'approved', 'delivered'])->default('placed');
             $table->boolean('complete')->default(false);
             $table->timestamps();
 

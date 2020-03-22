@@ -17,7 +17,7 @@ class CreatePhotosTable extends Migration
             $table->id();
             $table->unsignedBigInteger('petId');
             $table->string('photoUrl');
-            $table->text('additionalMetadata');
+            $table->text('additionalMetadata')->default('');
             $table->timestamps();
 
             $table->foreign('petId')->references('id')->on('pets');

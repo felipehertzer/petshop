@@ -25,7 +25,7 @@ class Pet extends Model
         return $this->hasMany('App\Tag', 'petId', 'id');
     }
 
-    public function photos()
+    public function photoUrls()
     {
         return $this->hasMany('App\Photo', 'petId', 'id');
     }

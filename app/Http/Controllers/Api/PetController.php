@@ -36,7 +36,7 @@ class PetController extends Controller
             try {
                 $pet = Pet::findOrFail($petId);
                 $pet->tags()->delete();
-                $pet->photos()->delete();
+                $pet->photoUrls()->delete();
             } catch (ModelNotFoundException $e) {
                 throw new ApiResponse('Pet not found', 404);
             }
@@ -52,6 +52,7 @@ class PetController extends Controller
         foreach ($request->get('photoUrls') as $key => $photo) {
             $netPhoto = new Photo();
             $netPhoto->photoUrl = $photo;
+            $netPhoto->additionalMetadata = '';
             $netPhoto->petId = $pet->id;
             $netPhoto->save();
         }
@@ -124,7 +125,7 @@ class PetController extends Controller
         }
 
         $pet = Pet::whereHas('tags', fn($q) => $q->whereIn('name', array_map('strtolower', $request->get('tags'))))
-            ->with(['category', 'tags', 'photos'])->get();
+            ->with(['category', 'tags', 'photoUrls'])->get();
 
         return response()->json($pet, 200);
     }
@@ -167,7 +168,7 @@ class PetController extends Controller
         }
 
         try {
-            $pet = Pet::where('id', $petId)->with(['category', 'tags', 'photos'])->firstOrFail();
+            $pet = Pet::where('id', $petId)->with(['category', 'tags', 'photoUrls'])->firstOrFail();
             return response()->json($pet, 200);
         } catch (ModelNotFoundException $e) {
             throw new ApiResponse('Pet not found', 404);
@@ -182,13 +183,17 @@ class PetController extends Controller
         try {
             $pet = Pet::findOrFail($petId);
 
-            foreach ($pet->photos as $photo) {
+            DB::beginTransaction();
+
+            foreach ($pet->photoUrls as $photo) {
                 Storage::disk('public')->delete($photo);
             }
 
             $pet->tags()->delete();
-            $pet->photos()->delete();
+            $pet->photoUrls()->delete();
             $pet->delete();
+
+            DB::commit();
 
             return response()->json('', 200);
         } catch (ModelNotFoundException $e) {
@@ -216,7 +221,7 @@ class PetController extends Controller
         $photo = new Photo();
         $photo->petId = $petId;
         $photo->photoUrl = url('images/pets/' . $imageName);
-        $photo->additionalMetadata = $request->get('additionalMetadata');
+        $photo->additionalMetadata = $request->get('additionalMetadata') || '';
         $photo->save();
 
         return response()->json('', 200);

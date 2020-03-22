@@ -29,6 +29,6 @@ class ApiResponse extends Exception
             'code' => $exception->code,
             'type' => '',
             'message' => $exception->message,
-        ]);
+        ], $exception->code);
     }
 }

@@ -13,7 +13,7 @@ class Photo extends Model
         'created_at', 'updated_at'
     ];
     protected $hidden = [
-        'created_at', 'updated_at', 'petId'
+        'created_at', 'updated_at', 'petId', 'additionalMetadata'
     ];
 
     public function pet()

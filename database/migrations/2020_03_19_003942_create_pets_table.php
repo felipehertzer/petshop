@@ -17,7 +17,7 @@ class CreatePetsTable extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('categoryId');
-            $table->enum('status', ['available', 'pending', 'sold']);
+            $table->enum('status', ['available', 'pending', 'sold'])->default('available');
             $table->timestamps();
 
             $table->index(['status']);

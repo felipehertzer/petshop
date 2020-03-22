@@ -77,10 +77,14 @@ class OrderController extends Controller
         try {
             $order = Order::findOrFail($orderId);
             if ($order->shipDate->isFuture()) {
-                $order->delete();
+                DB::beginTransaction();
 
                 $order->pet->status = 'available';
                 $order->pet->save();
+
+                $order->delete();
+
+                DB::commit();
 
                 return response()->json('', 200);
             } else {

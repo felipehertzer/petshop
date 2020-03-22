@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use App\User;
 use Tests\TestCase;
 
 class OrderTest extends TestCase
@@ -11,67 +12,73 @@ class OrderTest extends TestCase
      *
      * @return void
      */
+
     public function testCreateOrderSuccess()
     {
-        $this->json('POST', '/api/store/order', [
+        $user = User::find(1);
+        $this->actingAs($user, 'api')->json('POST', '/api/store/order', [
             "id" => 0,
-            "category" => [
-                "id" => 0,
-                "name" => "string"
-            ],
-            "name" => "doggie",
-            "photoUrls" => [
-                "string"
-            ],
-            "tags" => [
-                [
-                    "id" => 0,
-                    "name" => "string"
-                ]
-            ],
-            "status" => "available"
+            "petId" => 1,
+            "quantity" => 1,
+            "shipDate" => "2020-03-22T03:06:48.732Z",
+            "status" => "placed",
+            "complete" => false
         ])->assertStatus(200);
     }
 
     public function testCreateOrderFail()
     {
-        $this->json('POST', '/api/store/order')
-            ->assertStatus(200);
+        $user = User::find(1);
+        $this->actingAs($user, 'api')->json('POST', '/api/store/order')
+            ->assertStatus(400);
     }
 
     public function testFindOrderSuccess()
     {
-        $this->json('GET', '/api/store/order/1')
-            ->assertStatus(200);
+        $user = User::find(1);
+        $this->actingAs($user, 'api')->json('GET', '/api/store/order/1')
+            ->assertStatus(200)->assertJsonStructure([
+            "id",
+            "petId",
+            "quantity",
+            "shipDate",
+            "status",
+            "complete"
+        ]);
     }
 
     public function testFindOrderNotFound()
     {
-        $this->json('GET', '/api/store/order/12345678890278174823647286')
-            ->assertStatus(200);
+        $user = User::find(1);
+        $this->actingAs($user, 'api')->json('GET', '/api/store/order/12345678')
+            ->assertStatus(404);
     }
 
     public function testFindOrderFail()
     {
-        $this->json('GET', '/api/store/order/ABC')
-            ->assertStatus(200);
+        $user = User::find(1);
+        $this->actingAs($user, 'api')->json('GET', '/api/store/order/ABC')
+            ->assertStatus(400);
     }
 
     public function testDeleteOrderSuccess()
     {
-        $this->json('DELETE', '/api/store/order/1')
+        $user = User::find(1);
+        $this->actingAs($user, 'api')->json('DELETE', '/api/store/order/2')
             ->assertStatus(200);
     }
 
     public function testDeleteOrderNotFound()
     {
-        $this->json('DELETE', '/api/store/order/12345678890278174823647286')
-            ->assertStatus(200);
+        $user = User::find(1);
+        $this->actingAs($user, 'api')->json('DELETE', '/api/store/order/12345678')
+            ->assertStatus(404);
     }
 
     public function testDeleteOrderFail()
     {
-        $this->json('DELETE', '/api/store/order/ABC')
-            ->assertStatus(200);
+        $user = User::find(1);
+        $this->actingAs($user, 'api')->json('DELETE', '/api/store/order/ABC')
+            ->assertStatus(400);
     }
 }
