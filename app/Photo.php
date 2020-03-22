@@ -16,6 +16,10 @@ class Photo extends Model
         'created_at', 'updated_at', 'petId', 'additionalMetadata'
     ];
 
+    /**
+     * Get Pet
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function pet()
     {
         return $this->belongsTo('App\Pet');

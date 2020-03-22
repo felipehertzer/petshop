@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public $successStatus = 200;
-
+    /**
+     * Register a new user by API
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -28,10 +31,14 @@ class AuthController extends Controller
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
         $success['token'] = $user->createToken('AppName')->accessToken;
-        return response()->json(['success' => $success], $this->successStatus);
+        return response()->json(['success' => $success], 200);
     }
 
-
+    /**
+     * Login API User
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -45,15 +52,19 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])) {
             $user = Auth::user();
             $success['token'] = $user->createToken('AppName')->accessToken;
-            return response()->json(['success' => $success], $this->successStatus);
+            return response()->json(['success' => $success], 200);
         } else {
             return response()->json(['error' => 'Unauthorised'], 401);
         }
     }
 
+    /**
+     * Get Auth User by API
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUser()
     {
         $user = Auth::user();
-        return response()->json(['success' => $user], $this->successStatus);
+        return response()->json(['success' => $user], 200);
     }
 }

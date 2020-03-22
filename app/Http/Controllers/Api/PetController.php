@@ -18,6 +18,12 @@ use Illuminate\Support\Facades\Validator;
 
 class PetController extends Controller
 {
+    /**
+     * Function that create or update a pet
+     * @param Request $request
+     * @param null $petId
+     * @throws ApiResponse
+     */
     private function createOrUpdate(Request $request, $petId = null)
     {
         $categoryId = $request->get('category')['id'];
@@ -65,6 +71,12 @@ class PetController extends Controller
         }
     }
 
+    /**
+     * Validate and create a new pet
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiResponse
+     */
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -89,6 +101,12 @@ class PetController extends Controller
         return response()->json('', 200);
     }
 
+    /**
+     * Validate and update a pet
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiResponse
+     */
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -114,6 +132,12 @@ class PetController extends Controller
         return response()->json('', 200);
     }
 
+    /**
+     * Find By Tags - Array
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiResponse
+     */
     public function findByTags(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -130,6 +154,13 @@ class PetController extends Controller
         return response()->json($pet, 200);
     }
 
+    /**
+     * Update a pet using form data
+     * @param Request $request
+     * @param $petId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiResponse
+     */
     public function updateByForm(Request $request, $petId)
     {
         if (!is_numeric($petId)) {
@@ -161,6 +192,12 @@ class PetController extends Controller
         }
     }
 
+    /**
+     * Find pet by Id
+     * @param $petId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiResponse
+     */
     public function findById($petId)
     {
         if (!is_numeric($petId)) {
@@ -175,6 +212,12 @@ class PetController extends Controller
         }
     }
 
+    /**
+     * delete pet by id
+     * @param $petId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiResponse
+     */
     public function remove($petId)
     {
         if (!is_numeric($petId)) {
@@ -201,6 +244,13 @@ class PetController extends Controller
         }
     }
 
+    /**
+     * Upload a pet's photo
+     * @param Request $request
+     * @param $petId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiResponse
+     */
     public function uploadImage(Request $request, $petId)
     {
         if (!is_numeric($petId)) {

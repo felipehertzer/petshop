@@ -16,6 +16,13 @@ use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
+
+    /**
+     * Create a new Order
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiResponse
+     */
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(),
@@ -53,6 +60,12 @@ class OrderController extends Controller
         return response()->json($order, 200);
     }
 
+    /**
+     * Find Order By ID
+     * @param $orderId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiResponse
+     */
     public function findById($orderId)
     {
         if (!is_numeric($orderId)) {
@@ -68,6 +81,12 @@ class OrderController extends Controller
         return response()->json($order, 200);
     }
 
+    /**
+     * Remove Order if shipDate is a future date
+     * @param $orderId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiResponse
+     */
     public function remove($orderId)
     {
         if (!is_numeric($orderId)) {

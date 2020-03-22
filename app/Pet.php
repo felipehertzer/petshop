@@ -15,16 +15,28 @@ class Pet extends Model
         'created_at', 'updated_at', 'categoryId'
     ];
 
+    /**
+     * Get Category
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function category()
     {
         return $this->hasOne('App\Category', 'id', 'categoryId');
     }
 
+    /**
+     * Get Tags
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function tags()
     {
         return $this->hasMany('App\Tag', 'petId', 'id');
     }
 
+    /**
+     * Get Photos
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function photoUrls()
     {
         return $this->hasMany('App\Photo', 'petId', 'id');

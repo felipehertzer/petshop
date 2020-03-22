@@ -15,6 +15,10 @@ class Tag extends Model
         'created_at', 'updated_at', 'petId'
     ];
 
+    /**
+     * Get Pet
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function pet()
     {
         return $this->belongsTo('App\Pet');

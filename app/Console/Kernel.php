@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // Run Command to verify if shipDate is past
         $schedule->command('deliveredOrder:verify')->hourly();
     }
 

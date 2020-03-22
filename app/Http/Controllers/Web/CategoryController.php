@@ -8,6 +8,10 @@ use App\Http\Controllers\Controller;
 
 class CategoryController extends Controller
 {
+    /**
+     * Show list of category
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $categories = Category::paginate(15);

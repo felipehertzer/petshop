@@ -39,6 +39,7 @@ class VerifyDeliveredOrder extends Command
      */
     public function handle()
     {
+        // find all orders that shipdate is less than now and status is placed or approved
         $orders = Order::whereIn('status', ['placed', 'approved'])->where('shipDate', '<=', Carbon::now())->get();
         foreach ($orders as $order) {
             $order->status = 'delivered';

@@ -18,6 +18,10 @@ class Order extends Model
         'shipDate' => 'datetime:Y-m-d\TH:i:s.v\Z',
     ];
 
+    /**
+     * Get Pet
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function pet()
     {
         return $this->hasOne('App\Pet', 'id', 'petId');

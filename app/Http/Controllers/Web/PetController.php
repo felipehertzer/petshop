@@ -9,6 +9,10 @@ use App\Pet;
 
 class PetController extends Controller
 {
+    /**
+     * Show list of pet
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $pets = Pet::paginate(15);

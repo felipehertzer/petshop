@@ -9,6 +9,10 @@ use App\Order;
 
 class OrderController extends Controller
 {
+    /**
+     * Show list of order
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $orders = Order::paginate(15);

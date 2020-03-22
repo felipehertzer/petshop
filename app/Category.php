@@ -14,6 +14,10 @@ class Category extends Model
         'created_at', 'updated_at'
     ];
 
+    /**
+     * Get Pets
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function pets()
     {
         return $this->hasMany('App\Pet');
